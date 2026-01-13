@@ -5,7 +5,6 @@
 #include <sstream>
 #include <map>
 
-
 using namespace std;
 
 std::map<std::string, int> opcode = {
