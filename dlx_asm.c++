@@ -7,7 +7,7 @@
 
 using namespace std;
 
-std::map<std::string, int> opcode = {
+map<std::string, int> opcode = {
     {"NOP", 0x00},
     {"LW", 0x01},
     {"SW", 0x02},
@@ -58,9 +58,12 @@ std::map<std::string, int> opcode = {
     {"JAL", 0x2F},
     {"JALR", 0x30},
 };
+map<string, int> labels;
 
 void write_data(ofstream& outfile, string line);
 void write_code(ofstream& outfile, string line);
+void FIRST_PASS(ifstream& dlxFile);
+int instruction_count = 0;
 
 int main (int argc, char* argv[]){
 
@@ -99,7 +102,10 @@ int main (int argc, char* argv[]){
     codeFile << "CONTENT\n";
     codeFile << "BEGIN\n";
 
-
+    //First pass 
+    FIRST_PASS(dlxFile);
+/*
+     //Second pass through. Get the instructions
     while (getline(dlxFile, line)) {
         if (line[0] != ';'){
             if (line == ".data"){
@@ -119,6 +125,7 @@ int main (int argc, char* argv[]){
             
         }
     }
+        */
 
     dlxFile.close();
 
@@ -136,5 +143,50 @@ void write_data(ofstream& outfile, string line){
 
 void write_code(ofstream& outfile, string line){
 
+
+}
+
+   void FIRST_PASS(ifstream& dlxFile)
+{
+    string line;
+    bool inText = false;
+    int instruction_count = 0;
+
+    while (getline(dlxFile, line)) {
+                // Get the first word of each line and ignore white space
+        stringstream LINE(line);
+        string command;
+        LINE >> command;
+
+        // if the line is empty ignore it and loop again
+        if (command.empty()) continue;
+
+        // Ignore comments and loop again
+        if (command[0] == ';') continue;
+
+        // Wait for .text to show up
+        if (!inText) {
+            if (command == ".text") {
+                inText = true;
+            }
+            continue;
+        }
+
+        if (opcode.contains(command)){ //if our line is in our instruction set
+                instruction_count++; //increment the counter
+            }
+            else {
+                //if it is a label, don't touch the counter and just store the instruction count
+                labels[command] = instruction_count; 
+            }
+    }
+    // Debug: Print all labels after first pass
+    cout << "\n=== FIRST PASS DEBUG ===" << endl;
+    cout << "Total instructions: " << instruction_count << endl;
+    cout << "\nLabels found:" << endl;
+    for (const auto& [label, address] : labels) {
+        cout << "  " << label << " -> instruction " << address << endl;
+    }
+    cout << "======================\n" << endl;
 
 }
