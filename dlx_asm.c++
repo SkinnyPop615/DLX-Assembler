@@ -105,7 +105,7 @@ int main (int argc, char* argv[]){
 
     //First pass 
     FIRST_PASS(dlxFile);
-/*
+
      //Second pass through. Get the instructions
     while (getline(dlxFile, line)) {
         if (line[0] != ';'){
@@ -126,7 +126,6 @@ int main (int argc, char* argv[]){
             
         }
     }
-        */
 
     dlxFile.close();
 

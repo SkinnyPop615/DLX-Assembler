@@ -1,18 +1,19 @@
 {
+  "version": "0.2.0",
   "configurations": [
     {
-      "name": "C/C++: clang++ build and debug active file",
+      "name": "Debug DLX Project",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${fileDirname}/${fileBasenameNoExtension}",
+      "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
       "args": ["example1.dlx", "datafile.mif", "code_file1.mif"],
       "stopAtEntry": false,
       "cwd": "${fileDirname}",
       "environment": [],
       "externalConsole": false,
-      "MIMode": "lldb",
-      "preLaunchTask": "C/C++: clang++ build active file"
+      "MIMode": "gdb",
+      "miDebuggerPath": "C:\\cygwin64\\bin\\gdb.exe",
+      "preLaunchTask": "Build with Cygwin g++"
     }
-  ],
-  "version": "2.0.0"
+  ]
 }
