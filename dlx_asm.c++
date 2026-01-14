@@ -83,7 +83,7 @@ int main (int argc, char* argv[]){
         cerr << "Error: Could not open input file " << dlxFileName << endl;
         return 1;
     }
-h
+
     string line;
     ofstream dataFile(dataFileName);
     ofstream codeFile(codeFileName);
