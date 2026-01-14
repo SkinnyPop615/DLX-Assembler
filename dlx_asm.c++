@@ -7,7 +7,7 @@
 
 using namespace std;
 
-map<std::string, int> opcode = {
+map <string, int> opcode = {
     {"NOP", 0x00},
     {"LW", 0x01},
     {"SW", 0x02},
@@ -56,8 +56,9 @@ map<std::string, int> opcode = {
     {"J", 0x2D},
     {"JR", 0x2E},
     {"JAL", 0x2F},
-    {"JALR", 0x30},
+    {"JALR", 0x30}
 };
+
 map<string, int> labels;
 
 void write_data(ofstream& outfile, string line);
@@ -78,7 +79,7 @@ int main (int argc, char* argv[]){
 
     ifstream dlxFile(dlxFileName);
 
-    if (!dlxFile) {
+    if (!dlxFile.is_open()) {
         cerr << "Error: Could not open input file " << dlxFileName << endl;
         return 1;
     }
