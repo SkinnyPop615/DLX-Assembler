@@ -79,7 +79,7 @@ int main (int argc, char* argv[]){
     ifstream dlxFile(dlxFileName);
 
     if (!dlxFile) {
-        std::cerr << "Error: Could not open input file " << dlxFileName << std::endl;
+        cerr << "Error: Could not open input file " << dlxFileName << endl;
         return 1;
     }
 
