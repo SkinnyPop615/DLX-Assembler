@@ -5,7 +5,7 @@
       "type": "cppdbg",
       "request": "launch",
       "program": "${fileDirname}/${fileBasenameNoExtension}",
-      "args": ["example1.dlx", "datafile.mif", "code_file1.mif"],
+      "args": ["example_test.dlx", "datafile.mif", "code_file1.mif"],
       "stopAtEntry": false,
       "cwd": "${fileDirname}",
       "environment": [],
