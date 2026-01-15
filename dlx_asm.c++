@@ -5,6 +5,7 @@
 #include <sstream>
 #include <map>
 #include <cstdint>
+#include <iomanip>
 
 using namespace std;
 
@@ -236,7 +237,7 @@ int main (int argc, char* argv[]){
 
 void write_data(ofstream& outfile, string line, int* count){
 
-
+    
 }
 
 void write_code(ofstream& outfile, string line, int* count){
