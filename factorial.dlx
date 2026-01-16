@@ -1,0 +1,43 @@
+;This is a comment
+;Comments always consume entire lines
+	
+	.data
+	
+n		1	5
+f		1	0
+
+	.text
+	;set up registers
+	ADDI	R1, R0, 2 ;loop variable
+	ADDI	R2, R0, 1 ; place to store placeholder result
+	JAL 	fact
+	SW   f(R0), R2
+done
+	J    done
+
+fact
+	LW R4, n(R0) ;load in how many times we loop
+loop
+
+	SGT R3, R1, R4 
+	BNEZ R3, fact_end         ; branch if R1 > n
+	ADDI R5, R0, 0       ; R5 will hold the multiplication result
+	ADDI R6, R0, 0       ; R6 is the inner loop counter
+
+multiplyloop
+
+	SGT R7, R6, R1
+	BNEZ R7, multDONE    ; branch if we've added R2 to itself R1 times
+	ADD R5, R5, R2       ; R5 += R2
+	ADDI R6, R6, 1       ; increment counter
+	J multiplyloop
+multDONE
+	ADD R2, R0, R5       ; move result back to R2
+	ADDI R1, R1, 1       ; increment outer loop variable
+	J loop               ; continue outer loop
+
+fact_end 
+	JR   R31
+
+	
+	
