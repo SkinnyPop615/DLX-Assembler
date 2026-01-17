@@ -215,6 +215,7 @@ int main (int argc, char* argv[]){
 
             if (command == ".text"){
                 data = 0;
+                count = 0;
             }
 
             if (data == 1){
@@ -244,6 +245,7 @@ void write_data(ofstream& outfile, string line, int* count){
             LINE >> variable1 ;
             int depth = stoi(variable1);
             int val;
+            vars[Instruction] = *count;
 
             for (int i = 0; i < depth; i++){
                 LINE >> variable2;
@@ -252,8 +254,6 @@ void write_data(ofstream& outfile, string line, int* count){
                 outfile << " : " << hex << uppercase << setfill('0') << setw(8) << val << ";";
                 outfile << " --" << Instruction << "[" << i << "]" << "\n";
                 (*count)++;
-                vars[Instruction + to_string(i)] = val;
-                cout << Instruction + to_string(i) << " = " << vars[Instruction + to_string(i)] << endl;
             }
         }
     }
@@ -321,8 +321,29 @@ void write_code(ofstream& outfile, string line, int* count){
 
             }
             else if (type == "Memory"){
-                LINE >> variable1 >> variable2 >> variable3;
+                LINE >> variable1 >> variable2;
                 // Process Memory type instruction
+                if (Instruction == "LW"){
+                    Memory.opcode = opcode.at(Instruction);
+                    variable1.erase(0, 1); //delete the r
+                    Memory.r_data = stoi(variable1);
+                    size_t openParenPos = variable2.find('(');
+                    size_t closeParenPos = variable2.find(')');
+                    string extracted = variable2.substr(0, openParenPos);
+                    string reg = variable2.substr(openParenPos + 1, closeParenPos);
+
+                    Memory.base_address = vars.at(extracted);
+                    Memory.r_offset = stoi(reg.erase(0, 1));
+
+                    combined = (Memory.opcode << 26) | (Memory.r_data << 21) | (Memory.base_address << 16) | (Memory.r_offset << 0);
+
+                    outfile << hex << uppercase << setfill('0') << setw(3) << *count;
+                    outfile << " : " << hex << uppercase << setfill('0') << setw(8) << combined << ";";
+                    outfile << " --" << line << "\n";
+                }
+                else {
+                    Memory.opcode = opcode.at(Instruction);
+                }
             }
             else if (type == "Branch"){
                 LINE >> variable1 >> variable2;
