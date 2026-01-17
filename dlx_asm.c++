@@ -335,7 +335,7 @@ void write_code(ofstream& outfile, string line, int* count){
                     Memory.base_address = vars.at(extracted);
                     Memory.r_offset = stoi(reg.erase(0, 1));
 
-                    combined = (Memory.opcode << 26) | (Memory.r_data << 21) | (Memory.base_address << 16) | (Memory.r_offset << 0);
+                    combined = (Memory.opcode << 26) | (Memory.r_data << 21) | (Memory.r_offset << 16) | (Memory.base_address << 0);
 
                     outfile << hex << uppercase << setfill('0') << setw(3) << *count;
                     outfile << " : " << hex << uppercase << setfill('0') << setw(8) << combined << ";";
@@ -343,6 +343,22 @@ void write_code(ofstream& outfile, string line, int* count){
                 }
                 else {
                     Memory.opcode = opcode.at(Instruction);
+                    variable2.erase(0, 1); //delete the r
+                    Memory.r_data = stoi(variable2);
+                    size_t openParenPos = variable1.find('(');
+                    size_t closeParenPos = variable1.find(')');
+                    string extracted = variable1.substr(0, openParenPos);
+                    string reg = variable1.substr(openParenPos + 1, closeParenPos);
+
+                    Memory.base_address = vars.at(extracted);
+                    Memory.r_offset = stoi(reg.erase(0, 1));
+
+                    combined = (Memory.opcode << 26) | (Memory.r_data << 21) | (Memory.r_offset << 16) | (Memory.base_address << 0);
+
+                    outfile << hex << uppercase << setfill('0') << setw(3) << *count;
+                    outfile << " : " << hex << uppercase << setfill('0') << setw(8) << combined << ";";
+                    outfile << " --" << line << "\n";
+
                 }
             }
             else if (type == "Branch"){
