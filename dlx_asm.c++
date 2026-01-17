@@ -147,6 +147,7 @@ struct {
 } Branch;
 
 map<string, int> labels;
+map<string, int> vars;
 
 void write_data(ofstream& outfile, string line, int* count);
 void write_code(ofstream& outfile, string line, int* count);
@@ -236,9 +237,26 @@ int main (int argc, char* argv[]){
 }
 
 void write_data(ofstream& outfile, string line, int* count){
+        stringstream LINE(line);
+        string Instruction, variable1, variable2;
+        LINE >> Instruction;
+        if (Instruction != ".data"){
+            LINE >> variable1 ;
+            int depth = stoi(variable1);
+            int val;
 
-    
-}
+            for (int i = 0; i < depth; i++){
+                LINE >> variable2;
+                val = stoi(variable2);
+                outfile << hex << uppercase << setfill('0') << setw(3) << *count;
+                outfile << " : " << hex << uppercase << setfill('0') << setw(8) << val << ";";
+                outfile << " --" << Instruction << "[" << i << "]" << "\n";
+                (*count)++;
+                vars[Instruction + to_string(i)] = val;
+                cout << Instruction + to_string(i) << " = " << vars[Instruction + to_string(i)] << endl;
+            }
+        }
+    }
 
 void write_code(ofstream& outfile, string line, int* count){
         stringstream LINE(line);
