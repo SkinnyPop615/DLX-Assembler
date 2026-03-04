@@ -58,7 +58,10 @@ const map <string, int> opcode = {
     {"J", 0x2D},
     {"JR", 0x2E},
     {"JAL", 0x2F},
-    {"JALR", 0x30}
+    {"JALR", 0x30},
+    {"PCH", 0x31},
+    {"PD", 0x32},
+    {"PDU", 0x33}
 };
 
 const map<string, string> OP_TYPE = {
@@ -110,7 +113,10 @@ const map<string, string> OP_TYPE = {
     {"J", "Jump"},
     {"JR", "Jump"},
     {"JAL", "Jump"},
-    {"JALR", "Jump"}
+    {"JALR", "Jump"},
+    {"PCH", "Jump"},
+    {"PD", "Jump"},
+    {"PDU", "Jump"}
 };
 
 struct {
@@ -150,6 +156,7 @@ map<string, int> labels;
 map<string, int> vars;
 
 void write_data(ofstream& outfile, string line, int* count);
+void write_string(ofstream& outfile, string line, int* count);
 void write_code(ofstream& outfile, string line, int* count);
 void FIRST_PASS(ifstream& dlxFile);
 int instruction_count = 0;
@@ -176,6 +183,7 @@ int main (int argc, char* argv[]){
     ofstream dataFile(dataFileName);
     ofstream codeFile(codeFileName);
     bool data = 0;
+    bool cons = 0;
     int count = 0;
 
     dataFile << "DEPTH = 1024;\n";
@@ -213,13 +221,22 @@ int main (int argc, char* argv[]){
                 data = 1;
             }
 
+            if (command == ".const"){
+                data = 0;
+                cons = 1;
+            }
+
             if (command == ".text"){
                 data = 0;
+                cons = 0;
                 count = 0;
             }
 
             if (data == 1){
                 write_data(dataFile, line, &count);
+            }
+            else if (cons == 1){
+                write_string(dataFile, line, &count);
             }
             else{
                 write_code(codeFile, line, &count);
@@ -257,6 +274,35 @@ void write_data(ofstream& outfile, string line, int* count){
             }
         }
     }
+
+void write_string(ofstream& outfile, string line, int* count){
+    stringstream LINE(line);
+        string Instruction, variable1;
+        char variable2;
+        LINE >> Instruction;
+        if (Instruction != ".const"){
+            LINE >> variable1;
+            cout << variable1 << endl;
+            int depth = stoi(variable1);
+            vars[Instruction] = *count;
+            int count_hold = *count;
+
+            do {
+                LINE.get(variable2);
+            } while (variable2 != '"');
+
+            for (int i = 0; i < depth; i++){
+                if (LINE.get(variable2)) {
+                    if ((variable2 != '"') && (variable2 != 9)){
+                        outfile << hex << uppercase << setfill('0') << setw(3) << *count;
+                        outfile << " : " << hex << uppercase << setfill('0') << setw(8) << (int)variable2 << ";";
+                        outfile << " --" << Instruction << "[" << i << "]" << "\n";
+                        (*count)++;
+                    }
+                }
+            }
+        }
+}
 
 void write_code(ofstream& outfile, string line, int* count){
         stringstream LINE(line);

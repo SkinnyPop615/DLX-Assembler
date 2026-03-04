@@ -6,8 +6,21 @@
 n		1	10
 result	1	0
 
+	.const
+
+s1		16	"Your output is: "
+
 	.text
-	
+
+	ADDI R1, R0, 0
+out
+	SGEI 	R11, R1, 16
+	BNEZ	R11, start
+	LW		R13, s1(R1)
+	PCH		R13
+	J		out
+
+start
 	ADDI	R1, R0, 0
 	ADDI	R2, R0, 1
 	LW		R10, n(R0)
@@ -23,6 +36,7 @@ top
 	
 exit
 	SW		result(R0), R3
+	PD		R3
 	
 done
 	J		done

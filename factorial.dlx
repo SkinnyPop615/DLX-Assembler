@@ -6,20 +6,44 @@
 n		1	5
 f		1	0
 
+	.const
+
+s1		37	"Welcome to the DLX factorial program!"
+
 	.text
-	
+
+	ADDI R1, R0, 0
+out
+	SGEI 	R11, R1, 37
+	BNEZ	R11, start
+	LW		R13, s1(R1)
+	PCH		R13
+	J		out
+
+start
+	ADDI	R13, R0, 10
+	PCH		R13
 	;set up registers
 	ADDI	R1, R0, 2 
 	;loop variable
 	ADDI	R2, R0, 1 
 	; place to store placeholder result
 	JAL 	fact
-	SW   f(R0), R2
+	SW   	f(R0), R2
+	PD		R2
 done
 	J    done
 
 fact
-	LW R4, n(R0) 
+	LW R4, n(R0)
+	PD		R4
+	ADDI	R13, R0, 33
+	ADDI	R14, R0, 32
+	ADDI	R15, R0, 61
+	PCH		R13
+	PCH		R14
+	PCH		R15
+	PCH		R14
 	;load in how many times we loop
 loop
 
