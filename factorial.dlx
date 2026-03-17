@@ -18,6 +18,7 @@ out
 	BNEZ	R11, start
 	LW		R13, s1(R1)
 	PCH		R13
+	ADDI	R1, R1, 1
 	J		out
 
 start

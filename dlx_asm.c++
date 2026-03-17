@@ -188,14 +188,14 @@ int main (int argc, char* argv[]){
 
     dataFile << "DEPTH = 1024;\n";
     dataFile << "WIDTH = 32;\n";
-    dataFile << "ADDDRESS_RADIX = HEX;\n";
+    dataFile << "ADDRESS_RADIX = HEX;\n";
     dataFile << "DATA_RADIX = HEX;\n";
     dataFile << "CONTENT\n";
     dataFile << "BEGIN\n\n";
 
     codeFile << "DEPTH = 1024;\n";
     codeFile << "WIDTH = 32;\n";
-    codeFile << "ADDDRESS_RADIX = HEX;\n";
+    codeFile << "ADDRESS_RADIX = HEX;\n";
     codeFile << "DATA_RADIX = HEX;\n";
     codeFile << "CONTENT\n";
     codeFile << "BEGIN\n\n";
