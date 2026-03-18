@@ -61,7 +61,10 @@ const map <string, int> opcode = {
     {"JALR", 0x30},
     {"PCH", 0x31},
     {"PD", 0x32},
-    {"PDU", 0x33}
+    {"PDU", 0x33},
+    {"GD", 0x34},
+    {"GDU", 0x35}
+
 };
 
 const map<string, string> OP_TYPE = {
@@ -116,7 +119,9 @@ const map<string, string> OP_TYPE = {
     {"JALR", "Jump"},
     {"PCH", "Jump"},
     {"PD", "Jump"},
-    {"PDU", "Jump"}
+    {"PDU", "Jump"},
+    {"GD", "Jump"},
+    {"GDU", "Jump"}
 };
 
 struct {
@@ -280,6 +285,7 @@ void write_string(ofstream& outfile, string line, int* count){
         string Instruction, variable1;
         char variable2;
         LINE >> Instruction;
+        int j = 0;
         if (Instruction != ".const"){
             LINE >> variable1;
             cout << variable1 << endl;
@@ -290,16 +296,26 @@ void write_string(ofstream& outfile, string line, int* count){
             do {
                 LINE.get(variable2);
             } while (variable2 != '"');
+            
+            int i = 0;
+            while (LINE.get(variable2) && variable2 != '"') {
 
-            for (int i = 0; i < depth; i++){
-                if (LINE.get(variable2)) {
-                    if ((variable2 != '"') && (variable2 != 9)){
-                        outfile << hex << uppercase << setfill('0') << setw(3) << *count;
-                        outfile << " : " << hex << uppercase << setfill('0') << setw(8) << (int)variable2 << ";";
-                        outfile << " --" << Instruction << "[" << i << "]" << "\n";
-                        (*count)++;
-                    }
+                if (variable2 == '\\') {
+                    char next;
+                    LINE.get(next);
+
+                    if (next == 'n') variable2 = '\n';
+                    else if (next == 'r') variable2 = '\r';
+                    else if (next == 't') variable2 = '\t';
+                    else variable2 = next;
                 }
+
+                outfile << hex << uppercase << setfill('0') << setw(3) << *count;
+                outfile << " : " << hex << uppercase << setfill('0') << setw(8) << (int)variable2 << ";";
+                outfile << " --" << Instruction << "[" << i << "]\n";
+
+                (*count)++;
+                i++;
             }
         }
 }

@@ -3,18 +3,18 @@
 	
 	.data
 	
-n		1	10
 result	1	0
 
 	.const
 
-s1		16	"Your output is: "
+s1		18	"\n\rEnter a number: "
+s2		18	"\n\rYour output is: "
 
 	.text
 
 	ADDI R1, R0, 0
 out
-	SGEI 	R11, R1, 16
+	SGEI 	R11, R1, 18
 	BNEZ	R11, start
 	LW		R13, s1(R1)
 	PCH		R13
@@ -24,7 +24,8 @@ out
 start
 	ADDI	R1, R0, 0
 	ADDI	R2, R0, 1
-	LW		R10, n(R0)
+	GD		R10
+	PCH		R10
 	
 top
 	SLEI	R11, R10, 1
@@ -37,6 +38,15 @@ top
 	
 exit
 	SW		result(R0), R3
+	ADDI R1, R0, 0
+print
+	SGEI 	R11, R1, 18
+	BNEZ	R11, pdone
+	LW		R13, s2(R1)
+	PCH		R13
+	ADDI	R1, R1, 1
+	J		print
+pdone
 	PD		R3
 	
 done
