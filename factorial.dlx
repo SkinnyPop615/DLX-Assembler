@@ -8,22 +8,42 @@ f		1	0
 
 	.const
 
-s1		37	"Welcome to the DLX factorial program!"
+s1		39	"\n\rWelcome to the DLX factorial program!"
+s2		18	"\n\rEnter a number: "
+s3		8	"\n\rTime: "
 
 	.text
-
+	TR
+	TGO
 	ADDI R1, R0, 0
+
 out
-	SGEI 	R11, R1, 37
-	BNEZ	R11, start
+	SGEI 	R11, R1, 39
+	BNEZ	R11, enter
 	LW		R13, s1(R1)
 	PCH		R13
 	ADDI	R1, R1, 1
 	J		out
 
-start
-	ADDI	R13, R0, 10
+enter
+	ADDI R1, R0, 0
+go
+	SGEI 	R11, R1, 18
+	BNEZ	R11, start
+	LW		R13, s2(R1)
 	PCH		R13
+	ADDI	R1, R1, 1
+	J		go
+
+start
+	TSP
+	GD		R4
+	TGO
+	PD		R4
+	ADDI	R13, R0, 10
+	ADDI	R14, R0, 13
+	PCH		R13
+	PCH		R14
 	;set up registers
 	ADDI	R1, R0, 2 
 	;loop variable
@@ -32,11 +52,21 @@ start
 	JAL 	fact
 	SW   	f(R0), R2
 	PD		R2
+	ADD		R2, R0, R0
+
+	printstr3
+	LW		R3, s3(R2)
+	PCH		R3
+	ADDI	R2, R2, 1
+	SLTI	R1, R2, 8
+	BNEZ	R1, printstr3
+
+	TSP
+	PDU		R30
 done
 	J    done
 
 fact
-	LW R4, n(R0)
 	PD		R4
 	ADDI	R13, R0, 33
 	ADDI	R14, R0, 32
@@ -53,7 +83,7 @@ loop
 	; branch if R1 > n
 	ADDI R5, R0, 0       
 	; R5 will hold the multiplication result
-	ADDI R6, R0, 0       
+	ADDI R6, R0, 1       
 	; R6 is the inner loop counter
 
 multiplyloop

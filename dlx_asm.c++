@@ -63,7 +63,10 @@ const map <string, int> opcode = {
     {"PD", 0x32},
     {"PDU", 0x33},
     {"GD", 0x34},
-    {"GDU", 0x35}
+    {"GDU", 0x35},
+    {"TR", 0x36},
+    {"TGO", 0x37},
+    {"TSP", 0x38}
 
 };
 
@@ -121,7 +124,10 @@ const map<string, string> OP_TYPE = {
     {"PD", "Jump"},
     {"PDU", "Jump"},
     {"GD", "Jump"},
-    {"GDU", "Jump"}
+    {"GDU", "Jump"},
+    {"TR", "Timer"},
+    {"TGO", "Timer"},
+    {"TSP", "Timer"}
 };
 
 struct {
@@ -436,6 +442,14 @@ void write_code(ofstream& outfile, string line, int* count){
                 outfile << hex << uppercase << setfill('0') << setw(3) << *count;
                 outfile << " : " << hex << uppercase << setfill('0') << setw(8) << combined << ";";
                 outfile << " --  " << Instruction << " \t" << "R" << variable1 << " " << hex << uppercase << setfill('0') << setw(3) << Branch.label << "\n";
+            }
+            else if(type == "Timer"){
+                Branch.rs1 = 30;
+                combined = (opcode.at(Instruction) << 26) | (Branch.rs1 << 21);
+
+                outfile << hex << uppercase << setfill('0') << setw(3) << *count;
+                outfile << " : " << hex << uppercase << setfill('0') << setw(8) << combined << ";";
+                outfile << " --  " << Instruction << "\n";
             }
             (*count)++;
         }
